@@ -25,6 +25,6 @@ Pokeman.java - File contains pokemon data
 	-Generate stats for pokemon based upon multipliers
 	-Stats are 10*multipliers for first level, then += multiplier per level
 
-TextInput.java- Class for hadnling text input
+TextInput.java- Class for handling text input
 	-Text input handled through public method, include acceptable answers and question text
 	-Verification method for displaying input to user and asking if it's okay in a y/n
