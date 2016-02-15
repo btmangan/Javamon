@@ -39,13 +39,14 @@ public class DisplayGUI {
 		{"CuteTown", " ", "OurHouse", "58", "213", "12", "17"}, //ourhouseentry
 		{"CuteTown", "OurHouse", " ", "12", "18", "58", "214"}	//ourhouseexit
 	};
-	
 	String[] Activation = new String[7];
 	
 	
-	
-	
-	
+	//Wild Pokemon Wiring ("Exterior","Interior",      "Minx", "Miny", "Maxx", "Maxy",    "minlevel", "maxlevel",     "Pokemon", "Pokemon", etc...)
+	String[][] WildPokemon = {
+		{"CuteTown", " ",      "45", "217", "50", "220",      "2","3",      "Pidgey", "Ratrat"}
+	};	
+	String[] WildDangerCheck = {"0", "", "", "", "", "", "", "", "", "", ""};
 	
 	
 	//SECTION 1.0- DRAWMAP
@@ -58,7 +59,7 @@ public class DisplayGUI {
 		int PlayerX = coords[0];
 		int PlayerY = coords[1];
 		Activation = new String[7];
-
+		String[] WildDangerCheck = {"0", "", "", "", "", "", "", "", "", "", ""};
 		
 		//applybase mesh
 		DrawSquare("X", 250, 250);
@@ -110,7 +111,7 @@ public class DisplayGUI {
 		
 		
 		
-		System.out.println("=============================\n=============================");
+		System.out.println("===============================\n===============================");
 		//PrintTheMap
 		for(int i = 0; i < 11; i++){
 			String Line = "";
@@ -144,20 +145,31 @@ public class DisplayGUI {
 	}
 	
 	private void CuteTown(){ 
+	
+	
+	//AREA CLEARING
+		
 		//Home Area
 		DrawSquareMinMax(" ", 45, 205, 65, 220);
+		
+		
+		
+	//HOUSES
 		
 		//Oak House
 		DrawSquareMinMax("X", 50, 210, 54, 214);
 		//Oak Door
 		DrawPoint("0", 52, 213);
-		
-		
 		//Our House
 		DrawSquareMinMax("X", 56, 210, 60, 214);
 		//Our Door
 		DrawPoint("0", 58, 213);
 		
+		
+	//POKEMON FIELDS
+		
+		//Oak House Field
+		DrawSquareMinMax("-", 45, 217, 50, 220);
 	}
 	
 	
@@ -226,6 +238,9 @@ public class DisplayGUI {
 			}
 			else{
 				Coords[1] -= 1;
+				if(RealMap[5][4] == "-"){
+					WildPokemonFieldSearch(Coords[0], Coords[1]);
+				}
 			}
 		}
 		if(Direction.charAt(0) == 's'){
@@ -236,6 +251,9 @@ public class DisplayGUI {
 			}
 			else{
 				Coords[1] += 1;
+				if(RealMap[5][6] == "-"){
+					WildPokemonFieldSearch(Coords[0], Coords[1]);
+				}
 			}
 		}
 		if(Direction.charAt(0) == 'a'){
@@ -246,6 +264,9 @@ public class DisplayGUI {
 			}
 			else{
 				Coords[0] -= 1;
+				if(RealMap[4][5] == "-"){
+					WildPokemonFieldSearch(Coords[0], Coords[1]);
+				}
 			}
 		}
 		if(Direction.charAt(0) == 'd'){
@@ -257,8 +278,11 @@ public class DisplayGUI {
 			}
 			else{
 				Coords[0] += 1;
+				if(RealMap[6][5] == "-"){
+					WildPokemonFieldSearch(Coords[0], Coords[1]);
+				}
 			}	
-		}	
+		}
 		return Coords;
 	}	
 	
@@ -288,12 +312,6 @@ public class DisplayGUI {
 				}
 			}
 			
-			//{"CuteTown", " ", "OakHouse", "52", "213", "12", "17"}, //oakhouseentry
-			//{"CuteTown", " ", "OurHouse", "58", "213", "12", "17"}, //ourhouseentry
-			//{"CuteTown", "OakHouse", " ", "12", "18", "52", "214"}, //oakhouseexit
-			//{"CuteTown", "OurHouse", " ", "12", "18", "58", "214"}  //ourhouseexit
-
-			
 			Counter++;
 			
 			
@@ -303,8 +321,58 @@ public class DisplayGUI {
 	
 	
 	
+	private void WildPokemonFieldSearch(int x, int y){
+		
+		int Counter = 0;
+		
+		String Str_x = (x + "").trim();
+		String Str_y = (y + "").trim();
+		
+		
+		while(Counter < WildPokemon.length){
+			
+			int SubArrayLength = WildPokemon[Counter].length;
+			int Counter8 = 8;
+			
+			int Min_x = Integer.parseInt(WildPokemon[Counter][2]) -1;
+			int Max_x = Integer.parseInt(WildPokemon[Counter][4]);
+			int Min_y = Integer.parseInt(WildPokemon[Counter][3]) -1;
+			int Max_y = Integer.parseInt(WildPokemon[Counter][5]);
+			
+			if(WildPokemon[Counter][0].equals(Exterior)){
+				if(WildPokemon[Counter][1].equals(Interior)){
+					if(x > Min_x){
+						if(y > Min_y){
+							if(x < Max_x){
+								if(y < Max_y){
+									
+									System.out.println("hit");
+									WildDangerCheck[0] = WildPokemon[Counter][6];
+									WildDangerCheck[1] = WildPokemon[Counter][7];
+									
+									//Generic Pokemon
+									while(Counter8 < SubArrayLength){
+										WildDangerCheck[Counter8-6] = WildPokemon[Counter][Counter8];
+										Counter8++;
+									}
+									
+									
+									
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			
+			
+			Counter++;
+		}	
+	}
 	
 	
+		
 	
 	
 	
@@ -312,6 +380,10 @@ public class DisplayGUI {
 	//ACTIVATION PULL 
 	public String[] ActivationCheck(){
 		return Activation;
+	}
+	
+	public String[] WildDangerCheck(){		
+		return WildDangerCheck;
 	}
 	
 	

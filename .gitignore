@@ -1,0 +1,3 @@
+#Filter Out Any Compiled Files From Commits 
+
+*.class

@@ -1,6 +1,7 @@
 import java.io.*;
 import java.lang.StringBuilder;
 import java.util.Scanner;
+import java.lang.Math;
 
 public class Pokemon{
 
@@ -15,10 +16,13 @@ public class Pokemon{
 	int[] Grid = {12, 12};
 	
 
-
+	//For Saving Input Text Values
 	String Choice = "";
+	
+	//Player Danger Iterator
+	int intDanger = 0;
 
-
+	//Player Inventory Values
 	String PlayerName = "";
 	int intBallCount = 0;
 	int intCash = 100;
@@ -42,8 +46,9 @@ public class Pokemon{
 	public void pkmCallstack(){
 		
 		while(true) {
-			System.out.println(" Exterior : " + Exterior);
-			System.out.println(" Interior : " + Interior + " X-" + Grid[0] + " Y-" + Grid[1]);
+			System.out.println("===============================");
+			System.out.println(" Exterior : " + Exterior + " X-" + Grid[0] + " Y-" + Grid[1]);
+			System.out.println(" Interior : " + Interior);
 
 			String Input = "";
 			//TODO- Make DisplayGUI display a readable abstract map!
@@ -59,18 +64,32 @@ public class Pokemon{
 			
 			if(Input.charAt(0) == 'w' || Input.charAt(0) == 'd' || Input.charAt(0) == 'a' || Input.charAt(0) == 's'){
 				
+				//Return player move grid depending on obstacle
 				Grid = gui.PlayerMove(Input, Grid);
 				
+				//init for door activation
 				String[] Activation = new String[7];
 				Activation = gui.ActivationCheck();
 				
+				//Check Activation of Door
 				if(Activation != null && Activation[0] != null){
 					if(Activation[0].charAt(0) != ' '){ 
 						Interior = Activation[2];
 						Grid[0] = Integer.parseInt(Activation[5]);
 						Grid[1] = Integer.parseInt(Activation[6]);
 					}
-				}				
+				}
+				
+				//Return array of wilddangercheck(tall grass)
+				String[] DangerCheck = gui.WildDangerCheck();
+				System.out.println(DangerCheck[0]);
+				if(DangerCheck[0] != "0"){
+					intDanger++;
+					if(intDanger >= 8){
+						
+					}
+				}
+				
 			}
 			
 			
