@@ -1,11 +1,10 @@
 import java.io.*;
 import java.lang.StringBuilder;
+import java.util.Scanner;
 
 public class Pokemon{
 
 	String inputString = "No Input";
-	InputStreamReader ir = new InputStreamReader(System.in);
-	BufferedReader br = new BufferedReader(ir);
 	Pokeman pokemanobj = new Pokeman();
 	
 	//Location Control
@@ -42,33 +41,41 @@ public class Pokemon{
 	//RECURSIVE UPDATE FUNCTION
 	public void pkmCallstack(){
 		
-		String Input = "";
-		//TODO- Make DisplayGUI display a readable abstract map!
-		DisplayGUI gui = new DisplayGUI();
-		gui.DrawMap(Interior, Exterior, Grid);
-		
-		try{	
-			Input = br.readLine();
-		}
-		catch(Exception e){
-			System.out.println("Input Error. Attempt re-entry.");
-			pkmCallstack();
-		}
-		
-	if(Input.charAt(0) == 'w' || Input.charAt(0) == 'd' || Input.charAt(0) == 'a' || Input.charAt(0) == 's'){
-		Grid = gui.PlayerMove(Input, Grid);
-		if(gui.ActivationCheck() == "Door"){ 
-			if(Interior != " "){
-				Interior = " ";
-			}
-			else{
-				Interior = "OakHouse";
-			}
-		}
-	}
-		
-		pkmCallstack();
+		while(true) {
+			System.out.println(" Exterior : " + Exterior);
+			System.out.println(" Interior : " + Interior + " X-" + Grid[0] + " Y-" + Grid[1]);
 
+			String Input = "";
+			//TODO- Make DisplayGUI display a readable abstract map!
+			DisplayGUI gui = new DisplayGUI();
+			gui.DrawMap(Interior, Exterior, Grid);
+			
+			Scanner scan = new Scanner(System.in);
+			Input = scan.nextLine(); 
+			if(Input.trim().length() == 0){
+				continue;
+			}
+			
+			
+			if(Input.charAt(0) == 'w' || Input.charAt(0) == 'd' || Input.charAt(0) == 'a' || Input.charAt(0) == 's'){
+				
+				Grid = gui.PlayerMove(Input, Grid);
+				
+				String[] Activation = new String[7];
+				Activation = gui.ActivationCheck();
+				
+				if(Activation != null && Activation[0] != null){
+					if(Activation[0].charAt(0) != ' '){ 
+						Interior = Activation[2];
+						Grid[0] = Integer.parseInt(Activation[5]);
+						Grid[1] = Integer.parseInt(Activation[6]);
+					}
+				}				
+			}
+			
+			
+			
+		}
 	}
 
 	public void EntrySequence(){

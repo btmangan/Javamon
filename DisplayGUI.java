@@ -1,25 +1,67 @@
 public class DisplayGUI {
 	
+	//Build an interior/exterior class, that maps the exterior
+	//the interiors that fall under that exterior, 
+	//each doorway (grid, interior, exterior), and the target (g,i,e) for that doorway
+	
+	//Glossary-
+	//1.0 DRAW MAP MAIN FUNCTION
+	//2.0 DRAW FUNCTIONS
+	//3.0 WALK FUNCTIONALITY
+	//4.0 ACTIVATION RETURN (returns the nature of the activation (doors, etc?))
+	
+	
+	
+	//SECTION 0.0- INIT 
+	//Location Arrays
+	//--------------------------------------------------------------
+	//The Abstract map is a map of the entire exterior layed out in a 2 dimensional array
+	//The Real map is all of the values that surround the player's position (Coords)
+	//When the player moves, the player's new Coords are checked against 
+	//the abstract map to create the real map
 	String[][] AbstractMap = new String[250][250];
 	String[][] RealMap = new String[12][12];
 	int[] Coords = new int[2];
-	String Activation = "";
+	
+	
+	//Location Values
+	//--------------------------------------------------------------
+	//The Word is made up of Exteriors
+	//Being Outside in an Exterior is indicated by an interior of " "
+	//Any other value but " " as an Interior means you are inside
 	String Interior = "";
 	String Exterior = "";
+
+	//Door Wiring, ["Exterior", "Current Interior", "Target Interior", "currentx", "currenty", "targetx", "targety"];
+	String[][] DoorArray = {
+		{"CuteTown", "OakHouse", " ", "12", "18", "52", "214"}, //oakhouseexit
+		{"CuteTown", " ", "OakHouse", "52", "213", "12", "17"}, //oakhouseentry
+		{"CuteTown", " ", "OurHouse", "58", "213", "12", "17"}, //ourhouseentry
+		{"CuteTown", "OurHouse", " ", "12", "18", "58", "214"}	//ourhouseexit
+	};
 	
+	String[] Activation = new String[7];
+	
+	
+	
+	
+	
+	
+	
+	//SECTION 1.0- DRAWMAP
+	//This function is called from the main class (Pokemon) from within a recursive loop
+	//The Map is drawn each loop
+	//================================================================
 	public void DrawMap(String interior, String exterior, int[] coords){
 		Interior = interior;
 		Exterior = exterior;
 		int PlayerX = coords[0];
 		int PlayerY = coords[1];
-		Activation = "";
+		Activation = new String[7];
+
 		
 		//applybase mesh
-		for(int i = 0; i < 249; i++){
-			for(int j = 0; j < 249; j++){
-				AbstractMap[i][j] = "X";
-			}
-		}
+		DrawSquare("X", 250, 250);
 		
 		
 		//ASSIGNrealmapcoordinates based upon player location
@@ -84,60 +126,103 @@ public class DisplayGUI {
 	
 	
 	
-	//AREAS 
+	
+	
+	
+	
+	
+	//SECTION 2.0- AREAS Draw Control
+	//===========================================================
+	
 	private void House(){ 
 	
 		//add basic walking area
-		for(int i = 10; i < 15; i++){
-			for(int j = 10; j < 18; j++){
-				AbstractMap[i][j] = " ";
-			}
-		}
-		
+		DrawSquareMinMax(" ", 10, 10, 15, 18);
 		//add doorway
-		for(int i = 12; i < 14; i++){
-			AbstractMap[i][18] = "0";
-		}
+		DrawPoint("0", 12, 18);
+		
 	}
 	
 	private void CuteTown(){ 
 		//Home Area
-		for(int i=40; i<71; i++){
-			for(int j=200; j < 220; j++){
-				AbstractMap[i][j] = " ";
-			}
-		}
+		DrawSquareMinMax(" ", 45, 205, 65, 220);
 		
 		//Oak House
-		for(int i=50; i<54; i++){
-			for(int j=210; j < 214; j++){
-				AbstractMap[i][j] = "X";
-			}
-		}
+		DrawSquareMinMax("X", 50, 210, 54, 214);
 		//Oak Door
-		AbstractMap[52][213] = "0";
+		DrawPoint("0", 52, 213);
 		
 		
 		//Our House
-		for(int i=65; i<69; i++){
-			for(int j=210; j < 214; j++){
-				AbstractMap[i][j] = "X";
-			}
-		}
+		DrawSquareMinMax("X", 56, 210, 60, 214);
 		//Our Door
-		AbstractMap[67][213] = "0";
+		DrawPoint("0", 58, 213);
+		
 	}
 	
 	
 	
 	
 	
-	public int[] PlayerMove(String Direction, int[] Coords){		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//SECTION 2.5- DRAWHELPERS
+	//======================================================
+	private void DrawSquare(String Type, int MaxX, int MaxY){
+		for(int i=0; i<MaxY; i++){
+			for(int j=0; j<MaxX; j++){
+				AbstractMap[j][i] = Type;
+			}
+		}
+		return;
+	}
+	
+	private void DrawSquareMinMax(String Type, int x, int y, int xM, int yM){
+		for(int i=y; i<yM; i++){
+			for(int j=x; j<xM; j++){
+				AbstractMap[j][i] = Type;
+			}
+		}
+		return;
+	}
+	
+	private void DrawPoint(String Type, int x, int y){
+		AbstractMap[x][y] = "0";
+		return;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//SECTION 3.0
+	//WALKING FUNCTIONALITY
+	public int[] PlayerMove(String Direction, int[] Coords){
+				
 		if(Direction.charAt(0) == 'w'){
 			if(RealMap[5][4] == "X"){
 			}
 			else if(RealMap[5][4] == "0"){
-				Activation = "Door";
+				Activation = SearchDoorList(Coords[0], Coords[1]-1);
 			}
 			else{
 				Coords[1] -= 1;
@@ -147,7 +232,7 @@ public class DisplayGUI {
 			if(RealMap[5][6] == "X"){
 			}
 			else if(RealMap[5][6] == "0"){
-				Activation = "Door";
+				Activation = SearchDoorList(Coords[0], Coords[1]+1);
 			}
 			else{
 				Coords[1] += 1;
@@ -157,7 +242,7 @@ public class DisplayGUI {
 			if(RealMap[4][5] == "X"){
 			}
 			else if(RealMap[4][5] == "0"){
-				Activation = "Door";
+				Activation = SearchDoorList(Coords[0]-1, Coords[1]);
 			}
 			else{
 				Coords[0] -= 1;
@@ -168,27 +253,64 @@ public class DisplayGUI {
 
 			}
 			else if(RealMap[6][5] == "0"){
-				Activation = "Door";
+				Activation = SearchDoorList(Coords[0]+1, Coords[1]);
 			}
 			else{
 				Coords[0] += 1;
 			}	
-		}
-		
-		if(Activation == "Door"){
-			if(Interior == "OakHouse"){
-				Coords[0] = 52;
-				Coords[1] = 214;
-			}
-			if(Interior == " " && Coords[0] == 52 && Coords[1] == 214){
-				Coords[0] = 12;
-				Coords[1] = 17;
-			}
-		}
-		
+		}	
 		return Coords;
 	}	
-	public String ActivationCheck(){
+	
+	private String[] SearchDoorList(int x, int y){
+				
+		String[] Result = new String[7];
+		int Counter = 0;
+		
+		
+		while(Counter < DoorArray.length){
+			
+			String Str_x = (x + "").trim();
+			String Str_y = (y + "").trim();
+			
+			if(DoorArray[Counter][0] == Exterior){  //checks to see if door trigger has same exterior
+				if(DoorArray[Counter][1] == Interior){ //checks to see if door trigger has same interior
+					if(DoorArray[Counter][3].equals(Str_x)){  
+						if(DoorArray[Counter][4].equals(Str_y)){
+							Result = DoorArray[Counter];
+							System.out.println(Interior + " To " + DoorArray[Counter][2] + " " + x + "," + y);
+						}
+					}
+					else{
+						System.out.println(DoorArray[Counter][3] + " Does Not Equal " + Str_x);
+						System.out.println(DoorArray[Counter][3].equals(Str_x));
+					}
+				}
+			}
+			
+			//{"CuteTown", " ", "OakHouse", "52", "213", "12", "17"}, //oakhouseentry
+			//{"CuteTown", " ", "OurHouse", "58", "213", "12", "17"}, //ourhouseentry
+			//{"CuteTown", "OakHouse", " ", "12", "18", "52", "214"}, //oakhouseexit
+			//{"CuteTown", "OurHouse", " ", "12", "18", "58", "214"}  //ourhouseexit
+
+			
+			Counter++;
+			
+			
+		}
+		return Result;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	//SECTION 4.0
+	//ACTIVATION PULL 
+	public String[] ActivationCheck(){
 		return Activation;
 	}
 	
