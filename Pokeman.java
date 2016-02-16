@@ -49,7 +49,7 @@ public class Pokeman {
 		boolean failure = true;
 		
 		float[] Stats = {0, 0, 0, 0, 0};
-		String[] Stats2 = {"", "", "", "", ""};
+		String[] Stats2 = {"", "", "", "", "", name};
 		int Counter = 0;
 		int PokemonLength = PokemonStats.length;
 		
@@ -107,7 +107,7 @@ public class Pokeman {
 	
 	public String[] ReturnMoves(String name, int level){
 		
-		String[] ReturnMoves = {"", "", "", ""};
+		String[] ReturnMoves = {"empty", "empty", "empty", "empty"};
 		int Counter = 0;
 		
 		if(ReferenceNumber == -1){
@@ -118,12 +118,14 @@ public class Pokeman {
 		while(Counter < MovesetLen){
 			if(PokemonMoves[ReferenceNumber][Counter].contains("_")){
 				String[] parsedstring = PokemonMoves[ReferenceNumber][Counter].split("_");
+				
 				if((Integer.parseInt(parsedstring[0])) < level){ 
 					ReturnMoves[0] = parsedstring[1];
 					ReturnMoves[1] = ReturnMoves[0];
-					ReturnMoves[2] = ReturnMoves[0];
-					ReturnMoves[3] = ReturnMoves[0];
+					ReturnMoves[2] = ReturnMoves[1];
+					ReturnMoves[3] = ReturnMoves[2];
 				}
+				
 			}
 			Counter++;
 		}		

@@ -32,7 +32,7 @@ public class TextInput {
 		
 	}
 	
-	private String VerifyInput(String input){
+	private String VerifyInput(String input) {
 		
 		System.out.println("=========================");
 		System.out.println("You Entered " + input);
@@ -46,15 +46,24 @@ public class TextInput {
 			QueryV();
 		}
 		if(Verify.charAt(0) == 'n'){
-			QueryV();
+			throw new CustomException("User Declined Input");
 		}
 
 		if(Verify.charAt(0) == 'y'){
 			return "y";
 		}		
 		else{
-			VerifyInput(input);
+			throw new CustomException("User Declined Input");
 		}
-		return "";
 	}	
+	
+	
+	public class CustomException extends RuntimeException
+	{
+	  public CustomException(String message)
+	  {
+		super(message);
+	  }
+	}
+	
 }

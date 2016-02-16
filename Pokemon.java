@@ -26,6 +26,22 @@ public class Pokemon{
 	String PlayerName = "";
 	int intBallCount = 0;
 	int intCash = 100;
+	
+	//PokemonName, PokemonLevel, PokemonHealthPercentage, conditionaleffects, move1, move2, move3, move4
+	String[][] PokemonLineup = {
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"},
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"},
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"},
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"},
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"},
+		{"empty", "level", "health", "effects", "move", "move", "move", "move"}
+	};
+	String Move1 = "";
+	String Move2 = "";
+	String Move3 = "";
+	String Move4 = "";
+	
+	
 	String[] inventory = {}; 
 
 	boolean inBattle = false;
@@ -96,11 +112,14 @@ public class Pokemon{
 			
 		}
 	}
+	
+	
 
 	public void EntrySequence(){
 		
 		char PokemonChoice = ' ';
 		String PokemonName = "";
+		String[][] PokemonReceiver = pokemanobj.ReturnPokeman("Bulbasaur",4);
 
 		String Description1 = new StringBuilder()
 			.append("DESC: YOU ARE AN ASPIRING POKEMON TRAINER.\n")
@@ -124,25 +143,91 @@ public class Pokemon{
 		System.out.println(Meta1);
 		System.out.println(Description1);
 		
-		TextInput ti = new TextInput("What is your name?::", "");
-		PlayerName = ti.QueryV();
 		
+		
+		
+		//NAME INPUT DIALOG
+		TextInput ti = new TextInput("What is your name?::", "");
+		try{
+			PlayerName = ti.QueryV();
+		}
+		catch(Exception e){
+			PlayerName = ti.QueryV();
+		}
+		
+		
+		//POKEMON CHOICE DIALOGUE
 		System.out.println(Description2);
 		ti = new TextInput("Will you choose Bulbasaur, Charmander, or Squirtle?::(bcs)::", "bcs");
-		PokemonChoice = ti.QueryV().charAt(0);
+		try{
+			PokemonChoice = ti.QueryV().charAt(0);
+		}
+		catch(Exception e){
+			PokemonChoice = ti.QueryV().charAt(0);
+		}
 		
+		
+		
+		//Assigns pokemon based upon choice
 		if(PokemonChoice == 'b'){
-			String[][] PokemonReceiver = pokemanobj.ReturnPokeman("Bulbasaur",4);
+			PokemonReceiver = pokemanobj.ReturnPokeman("Bulbasaur",4);
 		}
 		if(PokemonChoice == 'c'){
-			String[][] PokemonReceiver = pokemanobj.ReturnPokeman("Charmander",4);
+			PokemonReceiver = pokemanobj.ReturnPokeman("Charmander",4);
 		}
 		if(PokemonChoice == 's'){
-			String[][] PokemonReceiver = pokemanobj.ReturnPokeman("Squirtle",4);
+			PokemonReceiver = pokemanobj.ReturnPokeman("Squirtle",4);
 		}
 		
+		AddPokemon(PokemonReceiver[0][5], "3", "100", "", PokemonReceiver[1]);
+		System.out.println(PokemonLineup[0][0] + PokemonLineup[0][1] + PokemonLineup[0][2] + PokemonLineup[0][3] + PokemonLineup[0][4] + PokemonLineup[0][5] + PokemonLineup[0][6] + PokemonLineup[0][7]); //debug inventory add
 		System.out.println("OAK: GOOD LUCK IN YOUR ADVENTURES YOUNG MAN!"); 
 		
 		return;
 	}
+	
+	
+	
+	
+	
+	//ADDING POKEMON TO INVENTORY HANDLED HERE
+	//=================================================
+	private void AddPokemon(String Name, String Level, String Health, String Effects, String[] Moveset){
+		
+		int PokemonLevel = Integer.parseInt(Level);
+		int Index = FirstEmpty();
+		
+		int MoveSetLength = Moveset.length;
+		
+		if(Index == -1){
+			TextInput ti = new TextInput("Which Pokemon Do You Wish To Discard?::(0,1,2,3,4,5)", "012345");
+			Index = ti.QueryV().charAt(0) -'0';
+		}
+		
+		PokemonLineup[Index][0] = Name;
+		PokemonLineup[Index][1] = Level;
+		PokemonLineup[Index][2] = Health;
+		PokemonLineup[Index][3] = Effects;
+		
+		PokemonLineup[Index][4] = Moveset[0];
+		PokemonLineup[Index][5] = Moveset[1];
+		PokemonLineup[Index][6] = Moveset[2];
+		PokemonLineup[Index][7] = Moveset[3];
+	}
+	private int FirstEmpty(){ 		//Extension of above function
+									
+		int Counter = 0;			//Determines the index of the first empty slot in a player's inventory
+		while(Counter < 6){			//-1 if there are no empty slots
+			if(PokemonLineup[Counter][0].equals("empty")){
+				return Counter;
+			}
+			Counter++;
+		}
+		
+		Counter = -1;
+		return Counter;
+		
+	}
+	
+	
 }
