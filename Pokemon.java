@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.lang.Math;
 
 public class Pokemon{
+	//TODO - 
+	//	-FIX LEER SPAM ON MOVE ASSIGNMENT (IN POKEMAN)
 
 	String inputString = "No Input";
 	Pokeman pokemanobj = new Pokeman();
@@ -61,6 +63,8 @@ public class Pokemon{
 	//RECURSIVE UPDATE FUNCTION
 	public void pkmCallstack(){
 		
+		String[] WildPokemonList = new String[10]; 
+		
 		while(true) {
 			System.out.println("===============================");
 			System.out.println(" Exterior : " + Exterior + " X-" + Grid[0] + " Y-" + Grid[1]);
@@ -102,6 +106,19 @@ public class Pokemon{
 				if(DangerCheck[0] != "0"){
 					intDanger++;
 					if(intDanger >= 8){
+						
+						//Create Array of EnemyPokemon In Wild Grass
+						int Counter = 2;
+						while(DangerCheck[Counter] != ""){
+							WildPokemonList[Counter-2] = DangerCheck[Counter];
+							System.out.println(DangerCheck[Counter]);
+							Counter++;
+						}
+						
+						//initialize tall grass battle
+						Battle btl = new Battle();
+						btl.WildBattle(WildPokemonList, true, DangerCheck[0], DangerCheck[1], PokemonLineup);
+						intDanger = 0;
 						
 					}
 				}

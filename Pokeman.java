@@ -104,26 +104,28 @@ public class Pokeman {
 	
 	
 	
-	
+	//Returns an array of the 4 most recent moves in a Pokemon's move list when Generating New Pokemon
 	public String[] ReturnMoves(String name, int level){
 		
-		String[] ReturnMoves = {"empty", "empty", "empty", "empty"};
+		String[] ReturnMoves = {"empty", "empty", "empty", "empty"}; //result array
 		int Counter = 0;
 		
 		if(ReferenceNumber == -1){
 			return ReturnMoves;
 		}
-		int MovesetLen = PokemonMoves[ReferenceNumber].length; 
+		int MovesetLen = PokemonMoves[ReferenceNumber].length; //reference number is the number for the given pokemon
 
-		while(Counter < MovesetLen){
-			if(PokemonMoves[ReferenceNumber][Counter].contains("_")){
-				String[] parsedstring = PokemonMoves[ReferenceNumber][Counter].split("_");
+		while(Counter < MovesetLen){ //iterates through the full array of that pokemon's moves
+			if(PokemonMoves[ReferenceNumber][Counter].contains("_")){ //used to distinguish moves from other data 
+				String[] parsedstring = PokemonMoves[ReferenceNumber][Counter].split("_"); //splits the LEVEL of the move from the move's name
 				
-				if((Integer.parseInt(parsedstring[0])) < level){ 
-					ReturnMoves[0] = parsedstring[1];
-					ReturnMoves[1] = ReturnMoves[0];
-					ReturnMoves[2] = ReturnMoves[1];
+				if((Integer.parseInt(parsedstring[0])) < level){ //Move's level cannot exceed pokemon's level
+					//place move in the first position after shuffling previous moves down
 					ReturnMoves[3] = ReturnMoves[2];
+					ReturnMoves[2] = ReturnMoves[1];
+					ReturnMoves[1] = ReturnMoves[0];
+					ReturnMoves[0] = parsedstring[1];
+					
 				}
 				
 			}

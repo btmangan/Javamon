@@ -320,7 +320,8 @@ public class DisplayGUI {
 	}
 	
 	
-	
+	//takes player x and y coordinates. If coordinates are within wild grass...
+	//returns an array of the attributes of the pokemon within that grass 
 	private void WildPokemonFieldSearch(int x, int y){
 		
 		int Counter = 0;
@@ -334,6 +335,7 @@ public class DisplayGUI {
 			int SubArrayLength = WildPokemon[Counter].length;
 			int Counter8 = 8;
 			
+			//Checks The Dimensions of each wild grass area to see if player is inside
 			int Min_x = Integer.parseInt(WildPokemon[Counter][2]) -1;
 			int Max_x = Integer.parseInt(WildPokemon[Counter][4]);
 			int Min_y = Integer.parseInt(WildPokemon[Counter][3]) -1;
@@ -346,11 +348,12 @@ public class DisplayGUI {
 							if(x < Max_x){
 								if(y < Max_y){
 									
-									System.out.println("hit");
-									WildDangerCheck[0] = WildPokemon[Counter][6];
-									WildDangerCheck[1] = WildPokemon[Counter][7];
+									//Assigns Min and Max Levels of Pokemon to Array
+									WildDangerCheck[0] = WildPokemon[Counter][6]; //Min
+									WildDangerCheck[1] = WildPokemon[Counter][7]; //Max
 									
-									//Generic Pokemon
+									//Assigns From Start of WIld Pokemon list (for grass specified) from 8 (first wild pokemon)
+									//to as long as necessary, assinging these at the 3rd position in the WIld Danger Array
 									while(Counter8 < SubArrayLength){
 										WildDangerCheck[Counter8-6] = WildPokemon[Counter][Counter8];
 										Counter8++;
