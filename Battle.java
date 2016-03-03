@@ -36,6 +36,7 @@ public class Battle {
 	
 	
 	public void WildBattle(String[] EnemyPokemon, boolean Wild, String EnemyMinLvl, String EnemyMaxLvl, String[][] PokemonLineup){
+		
 		PlayerLineup = PokemonLineup;
 		
 		//Type Conversions 
